@@ -3,13 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import data from '../../../mock';
 
+const apiKey = process.env.OPENAI_API_KEY;
+const model = process.env.MODEL;
+
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-const model = process.env.MODEL;
-
 export async function POST(request: Request, response: Response) {
+
     if (!model) {
         return Response.json("no model");
     }
