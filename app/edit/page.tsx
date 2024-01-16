@@ -77,6 +77,8 @@ export default function Home() {
     const [auth, setAuth] = useState(false)
     const [isDeployActivate, setIsDeployActivate] = useState(false)
     const [hasDeployment, sethasDeployment] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
 
     const [modelSelectorOpen, setModelSelectorOpen] = useState(false)
@@ -101,6 +103,13 @@ export default function Home() {
     },
         [currentUrl]
     )
+
+    useEffect(() => {
+        if (isDialogOpen) {
+            console.log("2222")
+            handleDataToMarkdown()
+        }
+    }, [isDialogOpen, listenDeploy])
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -172,10 +181,6 @@ export default function Home() {
 
         if (isProcessing) return (
             <div>
-                <Button disabled>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Updating Preview (大约需要 {leftTime} s)
-                </Button>
                 <Markdown remarkPlugins={[remarkGfm]}>{deployed}</Markdown>
             </div>
         );
@@ -188,27 +193,16 @@ export default function Home() {
         );
     }
 
+    const CurrentRenderer = () => {
+        if (isProcessing) return <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        return (
+            <Markdown remarkPlugins={[remarkGfm]}>{textMKD}</Markdown>
+        )
+    }
+
     const handleInput = (e: { target: { value: SetStateAction<string> } }) => {
         setIsLatest(false)
         setText(e.target.value)
-    }
-
-    const StateDeployButton = () => {
-        if (!isDeployActivate)
-            return (
-                <Button disabled>
-                    部署
-                </Button>
-            )
-        if (isPosting) return (
-            <Button disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                部署
-            </Button>
-        )
-        return (
-            <Button><TriangleUpIcon className="pt-0.5 h-10 w-8" />部署</Button>
-        )
     }
 
 
@@ -252,6 +246,11 @@ export default function Home() {
         if (data === 0) {
             notifyWrongPasscode()
         }
+    }
+
+    const handleDeployButtonClicked = () => {
+        setListenDeploy(!listenDeploy)
+        setIsDialogOpen(true)
     }
 
 
@@ -302,16 +301,18 @@ export default function Home() {
                             <DialogHeader>
                                 <ResizablePanelGroup
                                     direction="horizontal"
+                                    className='space-x-6'
                                 >
                                     <ResizablePanel defaultSize={50}>
-                                        <Badge variant="outline" className='mb-2'>线上简历</Badge>
                                         <div className="flex-row h-full items-center justify-center p-4 bg-slate-50 rounded-lg text-gray-400">
+                                            <Badge variant="outline" className='mb-2'>线上简历</Badge>
                                             <DeployedRenderer />
                                         </div>
                                     </ResizablePanel>
                                     <ResizablePanel defaultSize={50}>
-                                        <div className=" flex-row h-full items-center justify-center p-6">
-                                            <Markdown remarkPlugins={[remarkGfm]}>{textMKD}</Markdown>
+                                        <div className=" flex-row h-full items-center justify-center p-4 ">
+                                            <Badge variant="outline" className='mb-2'>新简历</Badge>
+                                            <CurrentRenderer />
                                         </div>
                                     </ResizablePanel>
                                 </ResizablePanelGroup>
@@ -320,7 +321,15 @@ export default function Home() {
 
                         <div className="flex flex-row-reverse space-x-2 space-x-reverse w-full px-4 pt-8  bg-slate-50">
                             <DialogTrigger>
-                                <StateDeployButton />
+                                {text ?
+                                    <Button onClick={handleDeployButtonClicked}>
+                                        <TriangleUpIcon className="pt-0.5 h-10 w-8" />
+                                        部署
+                                    </Button> :
+                                    <Button disabled>
+                                        <TriangleUpIcon className="pt-0.5 h-10 w-8" />
+                                        部署
+                                    </Button>}
                             </DialogTrigger>
                             {/* {hasDeployment && <Button variant={"secondary"} onClick={() => window.open(currentUrl.replace("edit", ""))}>查看现有部署</Button>} */}
                         </div>
