@@ -1,68 +1,24 @@
 "use client"
-import { SetStateAction, useEffect, useState } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
 
 import { Loader2 } from "lucide-react"
 import { TriangleUpIcon } from "@radix-ui/react-icons"
-
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import {
-    ResizablePanel,
-    ResizablePanelGroup,
-} from "@/components/ui/resizable"
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuIndicator,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-    NavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+import { ResizablePanel, ResizablePanelGroup, } from "@/components/ui/resizable"
+
+import { Dialog, DialogContent, DialogHeader, DialogTrigger, } from "@/components/ui/dialog"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
-
 
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-const frameworks = [
-    {
-        value: "next.js",
-        label: "Next.js",
-    },
-    {
-        value: "sveltekit",
-        label: "SvelteKit",
-    },
-    {
-        value: "nuxt.js",
-        label: "Nuxt.js",
-    },
-    {
-        value: "remix",
-        label: "Remix",
-    },
-    {
-        value: "astro",
-        label: "Astro",
-    },
-]
-
+import Header from "@/components/basic/header"
 
 export default function Home() {
     const [text, setText] = useState("")
@@ -81,11 +37,6 @@ export default function Home() {
     const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
 
-    const [modelSelectorOpen, setModelSelectorOpen] = useState(false)
-    const [models, setModels] = useState("")
-
-    // const notifyWrongPasscode = () => toast.error('密钥错误');
-    // const notifyWherePasscode = () => toast('请前往 Vercel 环境变量中查看或修改密钥');
     const notifyWrongPasscode = () => toast({
         variant: "destructive",
         title: "Passcode 错误",
@@ -142,7 +93,7 @@ export default function Home() {
         setTextMKD(MarkDownData)
     }
 
-    const postData = async () => {
+    const handleDataPost = async () => {
         if (!textMKD) {
             console.log('no text')
             return;
@@ -194,7 +145,12 @@ export default function Home() {
     }
 
     const CurrentRenderer = () => {
-        if (isProcessing) return <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        if (isProcessing)
+            return (
+                <div className='flex w-full justify-center py-4'>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                </div>
+            )
         return (
             <Markdown remarkPlugins={[remarkGfm]}>{textMKD}</Markdown>
         )
@@ -248,31 +204,58 @@ export default function Home() {
         }
     }
 
+    const ConfigConfirmDeployButtonClicked = () => {
+        if (!textMKD) {
+            return (
+                <Button disabled className="mr-2 flex-row">
+                    确认部署
+                </Button>
+            );
+        }
+
+        if (isPosting) {
+            return (
+                <Button disabled className="mr-2 flex-row">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                </Button>
+            );
+        } else {
+            return (
+                <Button onClick={handleDataPost} className="mr-2 flex-row">
+                    确认部署
+                </Button>
+            );
+        }
+    }
+
     const handleDeployButtonClicked = () => {
         setListenDeploy(!listenDeploy)
         setIsDialogOpen(true)
     }
 
-
-
     return (
         <>
             {!auth &&
-                <div className="flex flex-row-reverse items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+                <div
+                    className="flex flex-row-reverse items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
                     <Toaster />
                     <div className="flex-1 flex flex-col items-center justify-center space-y-80">
                         <div className="opacity-0">Placeholder</div>
                         <div className="space-y-2">
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">欢迎使用</h1>
-                            <p className="text-gray-600 dark:text-gray-400">welcome to mresume</p>
+                            <p className="text-gray-600 dark:text-gray-400">welcome to mresume </p>
                         </div>
-                        <p className="font-medium text-gray-400">mResume</p>
+                        <div className="font-medium text-gray-400 flex items-center">mresume
+                            <div className="rounded-full h-4 w-4 bg-blue-600 ml-1" />
+                        </div>
                     </div>
                     <div className="flex-1 flex flex-col items-center justify-center space-y-8">
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="passkey">密钥</Label>
-                                <Input className="w-full" placeholder="键入密钥" type="password" onChange={(e) => { setPasskey(e.target.value) }} />
+                                <Input className="w-full" placeholder="键入密钥" type="password" onChange={(e) => {
+                                    setPasskey(e.target.value)
+                                }} />
                             </div>
                             <Button onClick={getAuthState} className="mr-2">登录</Button>
                             {/* <Button variant="link" onClick={notifyWherePasscode}>忘记密钥</Button> */}
@@ -283,35 +266,28 @@ export default function Home() {
 
             {auth &&
                 <div className="flex h-full flex-col items-center justify-between">
-                    <div className='w-full p-4'>
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger>创建</NavigationMenuTrigger>
-                                </NavigationMenuItem>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger>部署</NavigationMenuTrigger>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                    </div>
-                    <Separator />
+                    <Header />
                     <Dialog>
                         <DialogContent>
                             <DialogHeader>
+                                <div className='flex flex-row-reverse'>
+                                    <ConfigConfirmDeployButtonClicked />
+                                </div>
                                 <ResizablePanelGroup
                                     direction="horizontal"
                                     className='space-x-6'
                                 >
                                     <ResizablePanel defaultSize={50}>
-                                        <div className="flex-row h-full items-center justify-center p-4 bg-slate-50 rounded-lg text-gray-400">
+                                        <div
+                                            className="flex-row h-full items-center justify-center p-4 bg-slate-50 rounded-lg text-gray-400">
                                             <Badge variant="outline" className='mb-2'>线上简历</Badge>
                                             <DeployedRenderer />
                                         </div>
                                     </ResizablePanel>
                                     <ResizablePanel defaultSize={50}>
-                                        <div className=" flex-row h-full items-center justify-center p-4 ">
+                                        <div className=" flex-row h-full p-4">
                                             <Badge variant="outline" className='mb-2'>新简历</Badge>
+                                            {/* <Button onClick={postData} className="mr-2 flex-row">确认部署</Button> */}
                                             <CurrentRenderer />
                                         </div>
                                     </ResizablePanel>
@@ -319,7 +295,8 @@ export default function Home() {
                             </DialogHeader>
                         </DialogContent>
 
-                        <div className="flex flex-row-reverse space-x-2 space-x-reverse w-full px-4 pt-8  bg-slate-50">
+                        <div
+                            className="flex flex-row-reverse space-x-2 space-x-reverse w-full px-4 pt-8  bg-slate-50">
                             <DialogTrigger>
                                 {text ?
                                     <Button onClick={handleDeployButtonClicked}>
@@ -331,7 +308,6 @@ export default function Home() {
                                         部署
                                     </Button>}
                             </DialogTrigger>
-                            {/* {hasDeployment && <Button variant={"secondary"} onClick={() => window.open(currentUrl.replace("edit", ""))}>查看现有部署</Button>} */}
                         </div>
 
                     </Dialog>

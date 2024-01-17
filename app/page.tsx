@@ -26,8 +26,6 @@ export default function Home() {
     [currentUrl]
   )
 
-
-
   const getData = async () => {
     const res = await fetch("api/fetchContent", {
       method: "POST",
@@ -60,7 +58,6 @@ export default function Home() {
     copy.default(currentUrl)
   }
 
-
   return (
     <div className="flex h-full flex-col items-center justify-between p-4">
       <Toaster />
@@ -77,13 +74,13 @@ export default function Home() {
             2024 mResume
           </p>
           <div className='flex space-x-2 items-center justify-center'>
-            <p className='text-gray-400 text-s'>
-              Get your own
+            <p className='text-gray-400 text-s font-mono'>
+              Click,Deploy yours.
             </p>
-            <Button variant="secondary" onClick={() => window.open("https://www.figma.com/community/file/1323193282285809885/magic-resume-cv-the-next-generation-of-resume")}>
+            {/* <Button variant="secondary" onClick={() => window.open("https://www.figma.com/community/file/1323193282285809885/magic-resume-cv-the-next-generation-of-resume")}>
               <Figma className='mr-2 h-4 w-4' />
               Create
-            </Button>
+            </Button> */}
             <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fhello-world"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
           </div>
         </div>
