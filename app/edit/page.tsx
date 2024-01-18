@@ -19,6 +19,8 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 import Header from "@/components/basic/header"
+import { useChat } from 'ai/react';
+
 
 export default function Home() {
     const [text, setText] = useState("")
@@ -36,6 +38,9 @@ export default function Home() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
+
+    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+
 
     const notifyWrongPasscode = () => toast({
         variant: "destructive",
@@ -57,8 +62,7 @@ export default function Home() {
 
     useEffect(() => {
         if (isDialogOpen) {
-            console.log("2222")
-            handleDataToMarkdown()
+            console.log("dialog open")
         }
     }, [isDialogOpen, listenDeploy])
 
@@ -73,25 +77,6 @@ export default function Home() {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [passkey]);
-
-    const handleDataToMarkdown = async () => {
-        setIsProcessing(true)
-        const res = await fetch("/api/parseContent", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                text: text
-            }),
-        })
-        const data = await res.json()
-        const MarkDownData = await data.data
-        console.log("MarkDownData", MarkDownData)
-        setIsProcessing(false)
-        setIsLatest(true)
-        setTextMKD(MarkDownData)
-    }
 
     const handleDataPost = async () => {
         if (!textMKD) {
@@ -128,7 +113,6 @@ export default function Home() {
         );
 
         //text and waiting for formed data
-        let leftTime = text.length / 50
 
         if (isProcessing) return (
             <div>
@@ -145,20 +129,17 @@ export default function Home() {
     }
 
     const CurrentRenderer = () => {
-        if (isProcessing)
-            return (
-                <div className='flex w-full justify-center py-4'>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                </div>
-            )
         return (
-            <Markdown remarkPlugins={[remarkGfm]}>{textMKD}</Markdown>
+            <div className="flex flex-col w-full max-w-md py-12 mx-auto stretch">
+                {messages.map(m => (
+                    <div key={m.id} className="whitespace-pre-wrap">
+                        <Markdown remarkPlugins={[remarkGfm]}>
+                            {m.role === 'assistant' ? m.content : ""}
+                        </Markdown>
+                    </div>
+                ))}
+            </div>
         )
-    }
-
-    const handleInput = (e: { target: { value: SetStateAction<string> } }) => {
-        setIsLatest(false)
-        setText(e.target.value)
     }
 
 
@@ -287,7 +268,6 @@ export default function Home() {
                                     <ResizablePanel defaultSize={50}>
                                         <div className=" flex-row h-full p-4">
                                             <Badge variant="outline" className='mb-2'>新简历</Badge>
-                                            {/* <Button onClick={postData} className="mr-2 flex-row">确认部署</Button> */}
                                             <CurrentRenderer />
                                         </div>
                                     </ResizablePanel>
@@ -295,25 +275,24 @@ export default function Home() {
                             </DialogHeader>
                         </DialogContent>
 
-                        <div
-                            className="flex flex-row-reverse space-x-2 space-x-reverse w-full px-4 pt-8  bg-slate-50">
-                            <DialogTrigger>
-                                {text ?
-                                    <Button onClick={handleDeployButtonClicked}>
-                                        <TriangleUpIcon className="pt-0.5 h-10 w-8" />
-                                        部署
-                                    </Button> :
-                                    <Button disabled>
-                                        <TriangleUpIcon className="pt-0.5 h-10 w-8" />
-                                        部署
-                                    </Button>}
-                            </DialogTrigger>
-                        </div>
+                        <form onSubmit={handleSubmit} className='w-full'>
+                            <div className="flex flex-col space-x-2 space-x-reverse py-4 px-4 bg-slate-50">
+                                <div className='flex flex-row-reverse'>
+                                    <DialogTrigger>
+                                        <Button type="submit" >
+                                            <TriangleUpIcon className="pt-0.5 h-10 w-8" />
+                                            部署
+                                        </Button>
+                                    </DialogTrigger>
+                                </div>
+
+                                <div className=" flex-row h-full w-full items-center justify-center py-2 space-y-2 bg-slate-50">
+                                    <Textarea className="resize-none" placeholder="粘贴纯文本简历" value={input} onChange={handleInputChange} />
+                                </div>
+                            </div>
+                        </form>
 
                     </Dialog>
-                    <div className=" flex-row h-full w-full items-center justify-center p-4 space-y-2 bg-slate-50">
-                        <Textarea className="resize-none" placeholder="粘贴纯文本简历" onChange={handleInput} />
-                    </div>
                 </div>
             }
         </>
