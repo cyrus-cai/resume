@@ -282,7 +282,7 @@ export default function Home() {
                             <div className="flex flex-col space-x-2 space-x-reverse py-4 px-4 bg-slate-50">
                                 <div className='flex flex-row-reverse'>
                                     <DialogTrigger>
-                                        <Button type="submit" >
+                                        <Button type="submit" disabled={!input} onClick={() => setMessages([])}>
                                             <TriangleUpIcon className="pt-0.5 h-10 w-8" />
                                             部署
                                         </Button>
