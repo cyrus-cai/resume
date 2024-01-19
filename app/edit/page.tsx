@@ -1,7 +1,9 @@
 "use client"
 import React, { SetStateAction, useEffect, useState } from 'react'
+import { useChat } from 'ai/react';
+import Header from "@/components/basic/header"
 
-import { Loader2 } from "lucide-react"
+import { Ghost, Loader2 } from "lucide-react"
 import { TriangleUpIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
@@ -18,8 +20,6 @@ import { useToast } from "@/components/ui/use-toast"
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-import Header from "@/components/basic/header"
-import { useChat } from 'ai/react';
 
 
 export default function Home() {
@@ -35,12 +35,13 @@ export default function Home() {
     const [auth, setAuth] = useState(false)
     const [isDeployActivate, setIsDeployActivate] = useState(false)
     const [hasDeployment, sethasDeployment] = useState(false)
+    const [isDeploymentSuccessful, setIsDeploymentSuccessful] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
 
     const { messages, input, handleInputChange, handleSubmit, setMessages, stop, isLoading } = useChat();
-
+    const deployURL = currentUrl.replace("edit", "")
 
     const notifyWrongPasscode = () => toast({
         variant: "destructive",
@@ -85,7 +86,6 @@ export default function Home() {
                 finalContent += m.content + '\n'; // 添加换行符以分隔消息
             }
         });
-
         setIsPosting(true)
         const res = await fetch("api/postContent", {
             method: "POST",
@@ -97,7 +97,10 @@ export default function Home() {
                 content: finalContent
             }),
         })
-        setIsPosting(false)
+        if (res.ok) {
+            setIsPosting(false)
+            setIsDeploymentSuccessful(true)
+        }
         console.log("res", res)
     }
 
@@ -189,7 +192,9 @@ export default function Home() {
     }
 
     const ConfigConfirmDeployButtonClicked = () => {
-        if (!textMKD) {
+
+        if (!isPosting && !isDeploymentSuccessful) {
+            console.log("text but not posting")
             return (
                 <Button disabled={isLoading} onClick={handleDataPost} className="mr-2 flex-row">
                     确认部署
@@ -198,23 +203,22 @@ export default function Home() {
         }
 
         if (isPosting) {
+            console.log("posting")
             return (
                 <Button disabled className="mr-2 flex-row">
                     <Loader2 className="h-4 w-4 animate-spin" />
                 </Button>
             );
-        } else {
+        }
+
+        if (!isPosting && isDeploymentSuccessful) {
+            console.log("deployed")
             return (
-                <Button onClick={handleDataPost} className="mr-2 flex-row">
-                    确认部署
+                <Button variant='ghost' disabled={isLoading} onClick={() => window.open(deployURL)} className="mr-2 flex-row">
+                    查看部署
                 </Button>
             );
         }
-    }
-
-    const handleDeployButtonClicked = () => {
-        setListenDeploy(!listenDeploy)
-        setIsDialogOpen(true)
     }
 
     return (
@@ -242,7 +246,6 @@ export default function Home() {
                                 }} />
                             </div>
                             <Button onClick={getAuthState} className="mr-2">登录</Button>
-                            {/* <Button variant="link" onClick={notifyWherePasscode}>忘记密钥</Button> */}
                         </div>
                     </div>
                 </div>

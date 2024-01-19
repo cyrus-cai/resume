@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useEffect, useState } from 'react';
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Share, Figma } from 'lucide-react'
+import { Share } from 'lucide-react'
 import toast, { Toaster } from 'react-hot-toast';
 import * as copy from 'copy-to-clipboard';
 

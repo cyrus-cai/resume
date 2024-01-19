@@ -56,12 +56,12 @@ const Header = () => {
         }
     }, []);
 
-    const url = currentUrl.replace("edit", "")
+    const deployURL = currentUrl.replace("edit", "")
 
     const components: { title: string; href: string; description: string }[] = [
         {
             title: "查看",
-            href: `${url}`,
+            href: `${deployURL}`,
             description:
                 "查看当前的部署内容",
         },
@@ -141,7 +141,7 @@ const Header = () => {
                             <div className="rounded-full h-4 w-4 bg-gray-400 ml-1" />
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => window.open(url)}>我的部署</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.open(deployURL)}>我的部署</DropdownMenuItem>
                         <Separator className="my-1" />
                         <DropdownMenuItem>检查更新</DropdownMenuItem>
                         <DropdownMenuItem>Pro</DropdownMenuItem>
