@@ -39,7 +39,7 @@ export default function Home() {
     const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
 
-    const { messages, input, handleInputChange, handleSubmit, setMessages, stop } = useChat();
+    const { messages, input, handleInputChange, handleSubmit, setMessages, stop, isLoading } = useChat();
 
 
     const notifyWrongPasscode = () => toast({
@@ -79,10 +79,13 @@ export default function Home() {
     }, [passkey]);
 
     const handleDataPost = async () => {
-        if (!textMKD) {
-            console.log('no text')
-            return;
-        }
+        let finalContent = '';
+        messages.forEach(m => {
+            if (m.role === 'assistant') {
+                finalContent += m.content + '\n'; // 添加换行符以分隔消息
+            }
+        });
+
         setIsPosting(true)
         const res = await fetch("api/postContent", {
             method: "POST",
@@ -91,7 +94,7 @@ export default function Home() {
             },
             body: JSON.stringify({
                 url: currentUrl.replace("edit", ""),
-                content: textMKD
+                content: finalContent
             }),
         })
         setIsPosting(false)
@@ -188,7 +191,7 @@ export default function Home() {
     const ConfigConfirmDeployButtonClicked = () => {
         if (!textMKD) {
             return (
-                <Button disabled className="mr-2 flex-row">
+                <Button disabled={isLoading} onClick={handleDataPost} className="mr-2 flex-row">
                     确认部署
                 </Button>
             );
