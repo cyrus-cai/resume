@@ -39,7 +39,7 @@ export default function Home() {
     const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
 
-    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+    const { messages, input, handleInputChange, handleSubmit, setMessages, stop } = useChat();
 
 
     const notifyWrongPasscode = () => toast({
