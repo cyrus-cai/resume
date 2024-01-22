@@ -3,7 +3,7 @@ import React, { SetStateAction, useEffect, useState } from 'react'
 import { useChat } from 'ai/react';
 import Header from "@/components/basic/header"
 
-import { Ghost, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { TriangleUpIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ import { ResizablePanel, ResizablePanelGroup, } from "@/components/ui/resizable"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, } from "@/components/ui/dialog"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
+import Image from "next/image"
 
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -24,7 +25,7 @@ import remarkGfm from 'remark-gfm'
 
 export default function Home() {
     const [text, setText] = useState("")
-    const [textMKD, setTextMKD] = useState("")
+    // const [textMKD, setTextMKD] = useState("")
     const [deployed, setDeployed] = useState("")
 
     const [isLatest, setIsLatest] = useState(false)
@@ -33,8 +34,8 @@ export default function Home() {
     const [currentUrl, setCurrentUrl] = useState('');
     const [passkey, setPasskey] = useState('');
     const [auth, setAuth] = useState(false)
-    const [isDeployActivate, setIsDeployActivate] = useState(false)
-    const [hasDeployment, sethasDeployment] = useState(false)
+    // const [isDeployActivate, setIsDeployActivate] = useState(false)
+    // const [hasDeployment, sethasDeployment] = useState(false)
     const [isDeploymentSuccessful, setIsDeploymentSuccessful] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [listenDeploy, setListenDeploy] = useState(false)
@@ -97,7 +98,7 @@ export default function Home() {
                 content: finalContent
             }),
         })
-        if (res.ok) {
+        if (res) {
             setIsPosting(false)
             setIsDeploymentSuccessful(true)
         }
@@ -164,11 +165,8 @@ export default function Home() {
         if (!data) {
             return
         }
-
-        sethasDeployment(true)
         const content = data.content
         console.log("content", content)
-        setIsDeployActivate(true)
         setDeployed(content)
     }
 
@@ -227,14 +225,22 @@ export default function Home() {
                 <div
                     className="flex flex-row-reverse items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
                     <Toaster />
-                    <div className="flex-1 flex flex-col items-center justify-center space-y-80">
+                    <div className="flex-1 flex flex-col items-center justify-center space-y-80 ">
                         <div className="opacity-0">Placeholder</div>
                         <div className="space-y-2">
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">欢迎使用</h1>
                             <p className="text-gray-600 dark:text-gray-400">welcome to mresume </p>
                         </div>
-                        <div className="font-medium text-gray-400 flex items-center">mresume
-                            <div className="rounded-full h-4 w-4 bg-blue-600 ml-1" />
+                        <div className="font-medium text-gray-400 flex items-center space-x-1">
+                            <p>
+                                mresume
+                            </p>
+                            <Image
+                                src="/logo.svg"
+                                alt="2222"
+                                width={16}
+                                height={16}
+                            />
                         </div>
                     </div>
                     <div className="flex-1 flex flex-col items-center justify-center space-y-8">
