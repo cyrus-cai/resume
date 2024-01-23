@@ -76,8 +76,8 @@ const Header = () => {
                 <NavigationMenu>
                 </NavigationMenu>
                 <div className="flex items-center justify-center  space-x-2">
-                    <Button variant="outline" onClick={() => window.open(`${currentUrl}/edit`)}>
-                        Dashboard
+                    <Button variant="highlight" onClick={() => window.open(`${currentUrl}/edit`)}>
+                        Go To Dashboard
                     </Button>
                     <Button variant="outline" onClick={handleCopyButtonClicked}>
                         Share

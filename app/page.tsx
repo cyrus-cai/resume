@@ -57,19 +57,15 @@ export default function Home() {
           <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
           <Separator className='mt-12 mb-4' />
           <div className='flex w-full text-gray-300 items-center justify-between'>
-            <p className='font-medium'>
+            {/* <p className='font-medium'>
               2024 mResume
             </p>
             <div className='flex space-x-2 items-center justify-center'>
               <p className='text-gray-400 text-s font-mono'>
                 Click,Deploy yours.
               </p>
-              {/* <Button variant="secondary" onClick={() => window.open("https://www.figma.com/community/file/1323193282285809885/magic-resume-cv-the-next-generation-of-resume")}>
-              <Figma className='mr-2 h-4 w-4' />
-              Create
-            </Button> */}
               <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fhello-world"><img src="https://vercel.com/button" alt="Deploy with Vercel" /></a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
