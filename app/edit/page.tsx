@@ -3,7 +3,7 @@ import React, { SetStateAction, useEffect, useState } from 'react'
 import { useChat } from 'ai/react';
 import Header from "@/components/basic/header"
 
-import { Loader2 } from "lucide-react"
+import { Figma, Loader2 } from "lucide-react"
 import { TriangleUpIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
@@ -321,12 +321,13 @@ export default function Home() {
                                                 <div className="space-y-1">
                                                     <h4 className="text-sm font-semibold">@MagicResume</h4>
                                                     <p className="text-sm">
-                                                        The React Framework – created and maintained by @vercel.
+                                                        The Next Generation of Resume using @Figma.
                                                     </p>
                                                     <div className="flex items-center pt-2">
-                                                        <span className="text-xs text-muted-foreground">
-                                                            Joined December 2021
-                                                        </span>
+                                                        <Button onClick={() => window.open("https://www.figma.com/community/file/1323193282285809885/magic-resume-cv-the-next-generation-of-resume")}>
+                                                            <Figma className="h-4 w-4 mr-2" />
+                                                            View on Figma
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </div>
