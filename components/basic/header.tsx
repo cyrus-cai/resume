@@ -1,3 +1,5 @@
+import packageInfo from '@/package.json';
+
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -19,7 +21,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils"
+import { ArrowBigUpDash } from 'lucide-react';
 import Image from "next/image";
+import { Button } from "../ui/button";
 
 const ListItem = React.forwardRef<
     React.ElementRef<"a">,
@@ -48,8 +52,50 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 
+
+const latestversion = async () => {
+    const res = await fetch('/api/fetchUpdate', {
+        method: 'POST',
+    })
+    const data = await res.json()
+
+    if (!data) {
+        return
+    }
+
+    const latestVersion = data.data.version
+    const link = data.data.jumpLink
+
+    console.log(latestVersion, link)
+
+    return { latestVersion, link }
+}
+
+const isLatestVersion = async () => {
+    const { latestVersion } = await latestversion() ?? { latestVersion: '', link: '' };
+    const current = packageInfo.version
+    if (latestVersion === current) {
+        return true
+    }
+    return false
+}
+
 const Header = () => {
     const [currentUrl, setCurrentUrl] = useState('');
+    const [isLatest, setIsLatest] = useState(true);
+    const [latestVersion, setLatestVersion] = useState('');
+    const [link, setLink] = useState('');
+
+    useEffect(() => {
+        async function checkVersion() {
+            const result = await isLatestVersion();
+            const { latestVersion, link } = await latestversion() ?? { latestVersion: '', link: '' };
+            setLatestVersion(latestVersion);
+            setLink(link);
+            setIsLatest(result);
+        }
+        checkVersion();
+    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -58,119 +104,39 @@ const Header = () => {
     }, []);
 
     const deployURL = currentUrl.replace("edit", "")
-
-    const components: { title: string; href: string; description: string }[] = [
-        {
-            title: "查看",
-            href: `${deployURL}`,
-            description:
-                "查看当前的部署内容",
-        },
-        {
-            title: "Hover Card",
-            href: "/docs/primitives/hover-card",
-            description:
-                "For sighted users to preview content available behind a link.",
-        },
-    ]
+    const [showUpdate, setShowUpdate] = useState(true)
 
     return (
         <>
             <div className='w-full p-4 flex flex-row items-center justify-between'>
-                <NavigationMenu>
-                    <NavigationMenuList>
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger>部署</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                                    <li className="row-span-3">
-                                        <NavigationMenuLink asChild>
-                                            <a
-                                                className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                                                href="/"
-                                            >
-                                                {/* <Icons.logo className="h-6 w-6" /> */}
-                                                <div className="mb-2 mt-4 text-lg font-medium">
-                                                    shadcn/ui
-                                                </div>
-                                                <p className="text-sm leading-tight text-muted-foreground">
-                                                    Beautifully designed components that you can copy and
-                                                    paste into your apps. Accessible. Customizable. Open
-                                                    Source.
-                                                </p>
-                                            </a>
-                                        </NavigationMenuLink>
-                                    </li>
-                                    <ListItem href="/docs" title="Introduction">
-                                        Re-usable components built using Radix UI and Tailwind CSS.
-                                    </ListItem>
-                                    <ListItem href="/docs/installation" title="Installation">
-                                        How to install dependencies and structure your app.
-                                    </ListItem>
-                                    <ListItem href="/docs/primitives/typography" title="Typography">
-                                        Styles for headings, paragraphs, lists...etc
-                                    </ListItem>
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
+                <DropdownMenuLabel className="flex items-center space-x-1">
+                    {/* <p>mResume</p> */}
+                    <Image
+                        src="/logo.svg"
+                        alt="2222"
+                        width={24}
+                        height={24}
+                    />
+                </DropdownMenuLabel>
 
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger>传播</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                                    <li className="row-span-3">
-                                        <NavigationMenuLink asChild>
-                                            <a
-                                                className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                                                href="/"
-                                            >
-                                                {/* <Icons.logo className="h-6 w-6" /> */}
-                                                <div className="mb-2 mt-4 text-lg font-medium">
-                                                    shadcn/ui
-                                                </div>
-                                                <p className="text-sm leading-tight text-muted-foreground">
-                                                    Beautifully designed components that you can copy and
-                                                    paste into your apps. Accessible. Customizable. Open
-                                                    Source.
-                                                </p>
-                                            </a>
-                                        </NavigationMenuLink>
-                                    </li>
-                                    <ListItem href="/docs" title="Introduction">
-                                        Re-usable components built using Radix UI and Tailwind CSS.
-                                    </ListItem>
-                                    <ListItem href="/docs/installation" title="Installation">
-                                        How to install dependencies and structure your app.
-                                    </ListItem>
-                                    <ListItem href="/docs/primitives/typography" title="Typography">
-                                        Styles for headings, paragraphs, lists...etc
-                                    </ListItem>
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
-                        {/* <NavigationMenuItem>
-                            <NavigationMenuTrigger>部署</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                                    {components.map((component) => (
-                                        <ListItem
-                                            key={component.title}
-                                            title={component.title}
-                                            href={component.href}
-                                        >
-                                            {component.description}
-                                        </ListItem>
-                                    ))}
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem> */}
-                    </NavigationMenuList>
-                </NavigationMenu>
-                <DropdownMenu>
-                    <DropdownMenuTrigger>                <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>MR</AvatarFallback>
-                    </Avatar></DropdownMenuTrigger>
+                <DropdownMenu onOpenChange={() => { setShowUpdate(!showUpdate) }}>
+                    <DropdownMenuTrigger>
+                        <div className='flex -space-x-2'>
+                            <Avatar>
+                                <AvatarImage src="https://github.com/shadcn.png" />
+                                <AvatarFallback>MR</AvatarFallback>
+                            </Avatar>
+                            {
+                                !isLatest && showUpdate &&
+                                <div className='p-0.5 bg-red-500 rounded-full z-10 h-fit -space-x-4'>
+                                    <ArrowBigUpDash className=' h-4 w-4 text-white' />
+                                </div>
+                            }
+                            {/* <div className={`p-0.5 bg-red-500 rounded-full z-10 h-fit -space-x-4 ${!isLatest && showUpdate}`}>
+                                <ArrowBigUpDash className=' h-4 w-4 text-white' />
+                            </div> */}
+                        </div>
+                    </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuLabel className="flex items-center space-x-1">
                             <p>mResume</p>
@@ -184,8 +150,18 @@ const Header = () => {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => window.open(deployURL)}>我的部署</DropdownMenuItem>
                         <Separator className="my-1" />
-                        <DropdownMenuItem>检查更新</DropdownMenuItem>
-                        <DropdownMenuItem>Pro</DropdownMenuItem>
+                        <div className='flex items-center'>
+                            {!isLatest &&
+                                <DropdownMenuItem className='flex w-full justify-between' onClick={() => window.open(link)}>
+                                    <p className='font-mono text-gray-500'>
+                                        {latestVersion}可用
+                                    </p>
+                                    <div className='p-0.5 bg-red-500 rounded-full'>
+                                        <ArrowBigUpDash className=' h-4 w-4 text-white' />
+                                    </div>
+                                </DropdownMenuItem>
+                            }
+                        </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
 

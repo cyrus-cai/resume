@@ -17,9 +17,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger, } from "@/component
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
 import Image from "next/image"
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+
+
 
 
 
@@ -289,23 +296,51 @@ export default function Home() {
 
                         <form onSubmit={handleSubmit} className='w-full'>
                             <div className="flex flex-col space-x-2 space-x-reverse py-4 px-4 bg-slate-50">
-                                <div className='flex flex-row-reverse'>
+                                <div className='flex flex-row-reverse w-full justify-between items-center'>
                                     <DialogTrigger>
                                         <Button type="submit" disabled={!input} onClick={() => setMessages([])}>
                                             <TriangleUpIcon className="pt-0.5 h-10 w-8" />
                                             部署
                                         </Button>
                                     </DialogTrigger>
+                                    <HoverCard>
+                                        <div className='flex items-center justify-center text-gray-300'>
+                                            mresume works best with
+                                            <HoverCardTrigger asChild>
+                                                <Button variant="link">@MagicResume</Button>
+                                            </HoverCardTrigger>
+                                        </div>
+                                        <HoverCardContent className="w-80">
+                                            <div className="flex justify-between space-x-4">
+                                                <Image
+                                                    src="/logo.svg"
+                                                    alt="2222"
+                                                    width={32}
+                                                    height={32}
+                                                />
+                                                <div className="space-y-1">
+                                                    <h4 className="text-sm font-semibold">@MagicResume</h4>
+                                                    <p className="text-sm">
+                                                        The React Framework – created and maintained by @vercel.
+                                                    </p>
+                                                    <div className="flex items-center pt-2">
+                                                        <span className="text-xs text-muted-foreground">
+                                                            Joined December 2021
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </HoverCardContent>
+                                    </HoverCard>
                                 </div>
-
                                 <div className=" flex-row h-full w-full items-center justify-center py-2 space-y-2 bg-slate-50">
                                     <Textarea className="resize-none" placeholder="粘贴纯文本简历" value={input} onChange={handleInputChange} />
-                                </div>
+                                    p</div>
                             </div>
-                        </form>
+                        </form >
 
-                    </Dialog>
-                </div>
+                    </Dialog >
+                </div >
             }
         </>
 
