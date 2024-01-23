@@ -335,7 +335,8 @@ export default function Home() {
                                     </HoverCard>
                                 </div>
                                 <div className=" flex-row h-full w-full items-center justify-center py-2 space-y-2 bg-slate-50">
-                                    <Textarea className="resize-none" placeholder="粘贴纯文本简历" value={input} onChange={handleInputChange} />
+                                    <Textarea className="resize-none" placeholder="粘贴纯文本简历 \
+                                     this is a beta preview and may contain a lot bugs & Thanks for your patience" value={input} onChange={handleInputChange} />
                                     p</div>
                             </div>
                         </form >

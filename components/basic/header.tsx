@@ -146,9 +146,12 @@ const Header = () => {
                                 width={16}
                                 height={16}
                             />
+                            <br />
+
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => window.open(deployURL)}>我的部署</DropdownMenuItem>
+
                         <Separator className="my-1" />
                         <div className='flex items-center'>
                             {!isLatest &&
@@ -164,9 +167,6 @@ const Header = () => {
                         </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
-
-
-
             </div>
             <Separator />
         </>
