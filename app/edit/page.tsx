@@ -298,10 +298,16 @@ export default function Home() {
                             <div className="flex flex-col space-x-2 space-x-reverse py-4 px-4 bg-slate-50">
                                 <div className='flex flex-row-reverse w-full justify-between items-center'>
                                     <DialogTrigger>
-                                        <Button type="submit" disabled={!input} onClick={() => setMessages([])}>
-                                            <TriangleUpIcon className="pt-0.5 h-10 w-8" />
-                                            部署
-                                        </Button>
+                                        {!text ?
+                                            <Button type="submit" disabled={true}>
+                                                <TriangleUpIcon className="pt-0.5 h-10 w-8" />
+                                                部署
+                                            </Button> :
+                                            <Button type="submit" onClick={() => setMessages([])}>
+                                                <TriangleUpIcon className="pt-0.5 h-10 w-8" />
+                                                部署
+                                            </Button>
+                                        }
                                     </DialogTrigger>
                                     <HoverCard>
                                         <div className='flex items-center justify-center text-gray-300'>
@@ -335,9 +341,8 @@ export default function Home() {
                                     </HoverCard>
                                 </div>
                                 <div className=" flex-row h-full w-full items-center justify-center py-2 space-y-2 bg-slate-50">
-                                    <Textarea className="resize-none" placeholder="粘贴纯文本简历 \
-                                     this is a beta preview and may contain a lot bugs & Thanks for your patience" value={input} onChange={handleInputChange} />
-                                    p</div>
+                                    <Textarea className="resize-none" placeholder="粘贴纯文本简历" value={input} onChange={handleInputChange} />
+                                </div>
                             </div>
                         </form >
 

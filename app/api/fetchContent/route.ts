@@ -9,7 +9,9 @@ export async function POST(req: Request, res: Response) {
     const response = await fetch(`https://midware-mresume-xii-kii.vercel.app/api/fetch?url=${url}`);
 
     const data = await response.json();
-    console.log(data);
+    if (!data) {
+        return Response.json('no data');
+    }
 
     return Response.json(data);
 }
