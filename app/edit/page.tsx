@@ -147,7 +147,7 @@ export default function Home() {
         return (
             <div className="flex flex-col w-full mx-auto stretch">
                 {messages.map(m => (
-                    <div key={m.id} className="whitespace-pre-wrap">
+                    <div key={m.id}>
                         <Markdown remarkPlugins={[remarkGfm]}>
                             {m.role === 'assistant' ? m.content : ""}
                         </Markdown>
