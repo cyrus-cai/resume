@@ -297,18 +297,19 @@ export default function Home() {
                         <form onSubmit={handleSubmit} className='w-full'>
                             <div className="flex flex-col space-x-2 space-x-reverse py-4 px-4 bg-slate-50">
                                 <div className='flex flex-row-reverse w-full justify-between items-center'>
-                                    <DialogTrigger>
-                                        {!text ?
-                                            <Button type="submit" disabled={true}>
-                                                <TriangleUpIcon className="pt-0.5 h-10 w-8" />
-                                                部署
-                                            </Button> :
-                                            <Button type="submit" onClick={() => setMessages([])}>
+                                    {
+                                        input ?
+                                            <DialogTrigger>
+                                                <Button type="submit" onClick={() => setMessages([])}>
+                                                    <TriangleUpIcon className="pt-0.5 h-10 w-8" />
+                                                    部署
+                                                </Button>
+                                            </DialogTrigger> :
+                                            <Button type="submit" disabled={true} className='mb-2'>
                                                 <TriangleUpIcon className="pt-0.5 h-10 w-8" />
                                                 部署
                                             </Button>
-                                        }
-                                    </DialogTrigger>
+                                    }
                                     <HoverCard>
                                         <div className='flex items-center justify-center text-gray-300'>
                                             mresume works best with
