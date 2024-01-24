@@ -10,7 +10,9 @@ const openai = new OpenAI({
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
-    let { messages } = await req.json();
+    let { messages, model } = await req.json();
+
+    console.log("model", model)
 
     const newPrompt = { role: 'user', content: '请将以上内容使用 markdown 格式进行输出' };
     messages = [...messages, newPrompt];
@@ -19,7 +21,7 @@ export async function POST(req: Request) {
 
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: model,
         stream: true,
         messages,
     });

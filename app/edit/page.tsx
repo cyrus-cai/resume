@@ -26,10 +26,6 @@ import {
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-
-
-
-
 export default function Home() {
     const [text, setText] = useState("")
     // const [textMKD, setTextMKD] = useState("")
@@ -47,8 +43,13 @@ export default function Home() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [listenDeploy, setListenDeploy] = useState(false)
     const { toast } = useToast()
+    const [model, setModel] = useState("gpt-3.5-turbo")
 
-    const { messages, input, handleInputChange, handleSubmit, setMessages, stop, isLoading } = useChat();
+    const { messages, input, handleInputChange, handleSubmit, setMessages, stop, isLoading } = useChat({
+        body: {
+            model: model,
+        }
+    });
     const deployURL = currentUrl.replace("edit", "")
 
     const notifyWrongPasscode = () => toast({
@@ -144,7 +145,7 @@ export default function Home() {
 
     const CurrentRenderer = () => {
         return (
-            <div className="flex flex-col w-full max-w-md py-12 mx-auto stretch">
+            <div className="flex flex-col w-full mx-auto stretch">
                 {messages.map(m => (
                     <div key={m.id} className="whitespace-pre-wrap">
                         <Markdown remarkPlugins={[remarkGfm]}>
@@ -285,7 +286,7 @@ export default function Home() {
                                         </div>
                                     </ResizablePanel>
                                     <ResizablePanel defaultSize={50}>
-                                        <div className=" flex-row h-full p-4">
+                                        <div className="flex-row h-full p-4 items-center justify-center">
                                             <Badge variant="outline" className='mb-2'>新简历</Badge>
                                             <CurrentRenderer />
                                         </div>
